@@ -1,8 +1,13 @@
-const params = { description: '' };
+const params = {
+  description: '',
+  city: 'Tokyogit '
+};
 
-fetch(
-  'http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=London'
-)
+const setWeatherURL = city => {
+  return `http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=${city}`;
+};
+
+fetch(setWeatherURL(params.city))
   .then(function(response) {
     return response.json();
   })
