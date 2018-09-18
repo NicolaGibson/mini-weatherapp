@@ -1,7 +1,7 @@
-const params = { description: "" };
+const params = { description: '' };
 
 fetch(
-  "http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=London"
+  'http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=London'
 )
   .then(function(response) {
     return response.json();
@@ -26,8 +26,8 @@ const getWeatherPhotos = description => {
       console.log(body.results);
       const imageArray = body.results;
       addThumbnails(imageArray);
-      const heroURL = getImageArray("#thumbs img");
-      setHeroImage(heroURL[0].getAttribute("data-fullimageurl"));
+      const heroURL = getImageArray('#thumbs img');
+      setHeroImage(heroURL[0].getAttribute('data-fullimageurl'));
     })
     .catch(function(error) {
       console.log(error);
@@ -42,15 +42,19 @@ const getWeatherDescription = data => {
 const addThumbnails = images => {
   images.forEach(image => {
     const thumb = createImage(image.urls.thumb, image.urls.full);
-    const parent = document.querySelector("#thumbs");
+    const parent = document.querySelector('#thumbs');
     addImage(parent, thumb);
+  });
+  document.querySelector('#thumbs').addEventListener('click', e => {
+    const srcURL = e.target.getAttribute('data-fullimageurl');
+    setHeroImage(srcURL);
   });
 };
 
 const createImage = (srcURL, fullImgURL) => {
-  const image = document.createElement("img");
+  const image = document.createElement('img');
   image.src = srcURL;
-  image.setAttribute("data-fullImageURL", fullImgURL);
+  image.setAttribute('data-fullImageURL', fullImgURL);
   return image;
 };
 
@@ -64,7 +68,17 @@ const getImageArray = selector => {
 };
 
 const setHeroImage = URL => {
-  const heroImage = createImage(URL);
-  const parent = document.querySelector("#photo");
+  const heroImage = createImage(URL, ' ');
+  const parent = document.querySelector('#photo');
+  parent.innerHTML = '';
   addImage(parent, heroImage);
 };
+
+// add click event listener to each thumbnail image <- set event listener on #thumbs div
+// capture data-fullimageurl of clicked item with e.target
+// set the hero inage src url to the data-fullimageurl we captured
+
+// document.querySelector('#thumbs').addEventListener('click', e => {
+//   const srcURL = e.target.getAttribute('data-fullimageurl');
+//   setHeroImage(srcURL);
+// });
