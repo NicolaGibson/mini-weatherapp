@@ -1,7 +1,7 @@
-const params = { description: '' };
+const params = { description: "" };
 
 fetch(
-  'http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=London'
+  "http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=London"
 )
   .then(function(response) {
     return response.json();
@@ -26,6 +26,8 @@ const getWeatherPhotos = description => {
       console.log(body.results);
       const imageArray = body.results;
       addThumbnails(imageArray);
+      const heroURL = getImageArray("#thumbs img");
+      setHeroImage(heroURL[0].src);
     })
     .catch(function(error) {
       console.log(error);
@@ -40,18 +42,29 @@ const getWeatherDescription = data => {
 const addThumbnails = images => {
   images.forEach(image => {
     const thumb = createImage(image.urls.thumb);
-    const parent = document.querySelector('#thumbs');
-    addThumbnail(parent, thumb);
+    const parent = document.querySelector("#thumbs");
+    addImage(parent, thumb);
   });
 };
 
 const createImage = URL => {
-  const image = document.createElement('img');
+  const image = document.createElement("img");
   image.src = URL;
 
   return image;
 };
 
-const addThumbnail = (parent, image) => {
+const addImage = (parent, image) => {
   parent.appendChild(image);
+};
+
+const getImageArray = selector => {
+  const imageArray = document.querySelectorAll(selector);
+  return [...imageArray];
+};
+
+const setHeroImage = URL => {
+  const heroImage = createImage(URL);
+  const parent = document.querySelector("#photo");
+  addImage(parent, heroImage);
 };
