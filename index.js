@@ -1,6 +1,6 @@
 const params = {
-  description: "",
-  city: "Tokyo"
+  description: '',
+  city: 'Tokyo'
 };
 
 const setWeatherURL = city => {
@@ -33,8 +33,12 @@ const getWeatherPhotos = description => {
       console.log(body.results);
       const imageArray = body.results;
       addThumbnails(imageArray);
-      const heroURL = getImageArray("#thumbs img");
-      setHeroImage(heroURL[0].getAttribute("data-fullimageurl"));
+      const heroURL = getImageArray('#thumbs img');
+      setHeroImage(
+        heroURL[0].getAttribute('data-fullimageurl'),
+        heroURL[0].getAttribute('data-photographer'),
+        heroURL[0].getAttribute('data-portfolio')
+      );
     })
     .catch(function(error) {
       console.log(error);
@@ -47,30 +51,45 @@ const getWeatherDescription = data => {
 };
 
 const addThumbnails = images => {
-  const parent = document.querySelector("#thumbs");
-  parent.innerHTML = "";
+  const parent = document.querySelector('#thumbs');
+  parent.innerHTML = '';
   images.forEach(image => {
-    const thumb = createImage(image.urls.thumb, image.urls.full);
+    const thumb = createImage(
+      image.urls.thumb,
+      image.urls.full,
+      image.user.name,
+      image.user.links.html
+    );
     addImage(parent, thumb);
+
+    // addPhotographerCredit(image.user.name, user.links.html);
+
+    // get the photographer name image.user.name
+    // update #credit-platform with name
+    // set href = user.links.html
   });
 
-  document.querySelector("#search").addEventListener("submit", e => {
+  document.querySelector('#search').addEventListener('submit', e => {
     e.preventDefault();
     console.log(e.currentTarget.city.value);
     params.city = e.currentTarget.city.value;
     getCityWeather(params.city);
   });
 
-  document.querySelector("#thumbs").addEventListener("click", e => {
-    const srcURL = e.target.getAttribute("data-fullimageurl");
-    setHeroImage(srcURL);
+  document.querySelector('#thumbs').addEventListener('click', e => {
+    const srcURL = e.target.getAttribute('data-fullimageurl');
+    const photographer = e.target.getAttribute('data-photographer');
+    const portfolio = e.target.getAttribute('data-portfolio');
+    setHeroImage(srcURL, photographer, portfolio);
   });
 };
 
-const createImage = (srcURL, fullImgURL) => {
-  const image = document.createElement("img");
+const createImage = (srcURL, fullImgURL, photographer, portfolio) => {
+  const image = document.createElement('img');
   image.src = srcURL;
-  image.setAttribute("data-fullImageURL", fullImgURL);
+  image.setAttribute('data-fullImageURL', fullImgURL);
+  image.setAttribute('data-photographer', photographer);
+  image.setAttribute('data-portfolio', portfolio);
   return image;
 };
 
@@ -83,15 +102,18 @@ const getImageArray = selector => {
   return [...imageArray];
 };
 
-const setHeroImage = URL => {
-  const heroImage = createImage(URL, " ");
-  const parent = document.querySelector("#photo");
-  parent.innerHTML = "";
+const setHeroImage = (URL, photographer, portfolio) => {
+  const heroImage = createImage(URL, '', '', '');
+  const parent = document.querySelector('#photo');
+  parent.innerHTML = '';
   addImage(parent, heroImage);
+  addPhotographerCredit(photographer, portfolio);
 };
 
-//capture submit value from search__input
-//take tha value and update params city
-//update fetch with new function
+const addPhotographerCredit = (name, portfolio) => {
+  const credit = document.querySelector('#credit-user');
+  credit.textContent = `${name}`;
+  credit.href = `${portfolio}`;
+};
 
 getCityWeather(params.city);
