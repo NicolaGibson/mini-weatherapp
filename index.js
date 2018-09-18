@@ -1,6 +1,6 @@
 const params = {
-  description: "",
-  city: "Tokyo"
+  description: '',
+  city: 'Tokyo'
 };
 
 const setWeatherURL = city => {
@@ -33,11 +33,11 @@ const getWeatherPhotos = description => {
       console.log(body.results);
       const imageArray = body.results;
       addThumbnails(imageArray);
-      const heroURL = getImageArray("#thumbs img");
+      const heroURL = getImageArray('#thumbs img');
       setHeroImage(
-        heroURL[0].getAttribute("data-fullimageurl"),
-        heroURL[0].getAttribute("data-photographer"),
-        heroURL[0].getAttribute("data-portfolio")
+        heroURL[0].getAttribute('data-fullimageurl'),
+        heroURL[0].getAttribute('data-photographer'),
+        heroURL[0].getAttribute('data-portfolio')
       );
     })
     .catch(function(error) {
@@ -51,8 +51,8 @@ const getWeatherDescription = data => {
 };
 
 const addThumbnails = images => {
-  const parent = document.querySelector("#thumbs");
-  parent.innerHTML = "";
+  const parent = document.querySelector('#thumbs');
+  parent.innerHTML = '';
   images.forEach(image => {
     const thumb = createImage(
       image.urls.thumb,
@@ -63,32 +63,33 @@ const addThumbnails = images => {
     addImage(parent, thumb);
   });
 
-  document.querySelector("#search").addEventListener("submit", e => {
+  document.querySelector('#search').addEventListener('submit', e => {
     e.preventDefault();
     console.log(e.currentTarget.city.value);
     params.city = e.currentTarget.city.value;
     getCityWeather(params.city);
   });
 
-  document.querySelector("#thumbs").addEventListener("click", e => {
-    const srcURL = e.target.getAttribute("data-fullimageurl");
-    const photographer = e.target.getAttribute("data-photographer");
-    const portfolio = e.target.getAttribute("data-portfolio");
+  document.querySelector('#thumbs').addEventListener('click', e => {
+    const srcURL = e.target.getAttribute('data-fullimageurl');
+    const photographer = e.target.getAttribute('data-photographer');
+    const portfolio = e.target.getAttribute('data-portfolio');
     setHeroImage(srcURL, photographer, portfolio);
-    document.querySelectorAll("img.current").forEach(img => {
-      img.classList.remove("current");
+    document.querySelectorAll('img.current').forEach(img => {
+      img.classList.remove('current');
     });
-    e.target.classList.add("current");
+    e.target.classList.add('current');
   });
 };
 
 const createImage = (srcURL, fullImgURL, photographer, portfolio) => {
-  const image = document.createElement("img");
+  const image = document.createElement('img');
   image.src = srcURL;
-  image.classList.add("thumb");
-  image.setAttribute("data-fullImageURL", fullImgURL);
-  image.setAttribute("data-photographer", photographer);
-  image.setAttribute("data-portfolio", portfolio);
+  image.classList.add('thumb');
+  image.classList.add('.thumbs__link');
+  image.setAttribute('data-fullImageURL', fullImgURL);
+  image.setAttribute('data-photographer', photographer);
+  image.setAttribute('data-portfolio', portfolio);
   return image;
 };
 
@@ -102,16 +103,17 @@ const getImageArray = selector => {
 };
 
 const setHeroImage = (URL, photographer, portfolio) => {
-  const heroImage = createImage(URL, "", "", "");
-  const parent = document.querySelector("#photo");
-  parent.innerHTML = "";
-  heroImage.classList.remove("thumb");
+  const heroImage = createImage(URL, '', '', '');
+  const parent = document.querySelector('#photo');
+  parent.innerHTML = '';
+  heroImage.classList.remove('thumb');
+  heroImage.classList.remove('.thumbs__link');
   addImage(parent, heroImage);
   addPhotographerCredit(photographer, portfolio);
 };
 
 const addPhotographerCredit = (name, portfolio) => {
-  const credit = document.querySelector("#credit-user");
+  const credit = document.querySelector('#credit-user');
   credit.textContent = `${name}`;
   credit.href = `${portfolio}`;
 };

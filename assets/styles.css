@@ -42,7 +42,7 @@
 }
 
 .photo::before {
-  content: "loading";
+  content: 'loading';
 
   display: grid;
   justify-content: center;
@@ -94,7 +94,7 @@
 .thumbs__link {
   flex: 0 0 auto;
 
-  animation: 0.25s forwards fade-in;
+  animation: 5s forwards fade-in;
 
   width: var(--thumb-w);
   height: var(--thumb-h);
