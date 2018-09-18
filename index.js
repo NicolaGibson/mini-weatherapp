@@ -1,12 +1,13 @@
-const params = { description: "" };
+const params = { description: '' };
 
 fetch(
-  "http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=Dubai"
+  'http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=London'
 )
   .then(function(response) {
     return response.json();
   })
   .then(function(body) {
+    console.log(body);
     getWeatherDescription(body);
     getWeatherPhotos(params.description);
   })
@@ -22,7 +23,9 @@ const getWeatherPhotos = description => {
       return response.json();
     })
     .then(function(body) {
-      console.log(body);
+      console.log(body.results);
+      const imageArray = body.results;
+      addThumbnails(imageArray);
     })
     .catch(function(error) {
       console.log(error);
@@ -32,4 +35,23 @@ const getWeatherPhotos = description => {
 const getWeatherDescription = data => {
   params.description = data.weather[0].description;
   console.log(params.description);
+};
+
+const addThumbnails = images => {
+  images.forEach(image => {
+    const thumb = createImage(image.urls.thumb);
+    const parent = document.querySelector('#thumbs');
+    addThumbnail(parent, thumb);
+  });
+};
+
+const createImage = URL => {
+  const image = document.createElement('img');
+  image.src = URL;
+
+  return image;
+};
+
+const addThumbnail = (parent, image) => {
+  parent.appendChild(image);
 };
