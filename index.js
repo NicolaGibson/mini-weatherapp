@@ -27,7 +27,7 @@ const getWeatherPhotos = description => {
       const imageArray = body.results;
       addThumbnails(imageArray);
       const heroURL = getImageArray("#thumbs img");
-      setHeroImage(heroURL[0].src);
+      setHeroImage(heroURL[0].getAttribute("data-fullimageurl"));
     })
     .catch(function(error) {
       console.log(error);
@@ -41,16 +41,16 @@ const getWeatherDescription = data => {
 
 const addThumbnails = images => {
   images.forEach(image => {
-    const thumb = createImage(image.urls.thumb);
+    const thumb = createImage(image.urls.thumb, image.urls.full);
     const parent = document.querySelector("#thumbs");
     addImage(parent, thumb);
   });
 };
 
-const createImage = URL => {
+const createImage = (srcURL, fullImgURL) => {
   const image = document.createElement("img");
-  image.src = URL;
-
+  image.src = srcURL;
+  image.setAttribute("data-fullImageURL", fullImgURL);
   return image;
 };
 
