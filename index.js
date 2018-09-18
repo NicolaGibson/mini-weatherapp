@@ -1,24 +1,26 @@
 const params = {
-  description: '',
-  city: 'Tokyogit '
+  description: "",
+  city: "Tokyo"
 };
 
 const setWeatherURL = city => {
   return `http://api.openweathermap.org/data/2.5/weather?APPID=7544db96b0f129d2f80d356fb7c5de00&q=${city}`;
 };
 
-fetch(setWeatherURL(params.city))
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(body) {
-    console.log(body);
-    getWeatherDescription(body);
-    getWeatherPhotos(params.description);
-  })
-  .catch(function(error) {
-    console.log(error);
-  });
+const getCityWeather = city => {
+  fetch(setWeatherURL(city))
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(body) {
+      console.log(body);
+      getWeatherDescription(body);
+      getWeatherPhotos(params.description);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+};
 
 const getWeatherPhotos = description => {
   fetch(
@@ -31,8 +33,8 @@ const getWeatherPhotos = description => {
       console.log(body.results);
       const imageArray = body.results;
       addThumbnails(imageArray);
-      const heroURL = getImageArray('#thumbs img');
-      setHeroImage(heroURL[0].getAttribute('data-fullimageurl'));
+      const heroURL = getImageArray("#thumbs img");
+      setHeroImage(heroURL[0].getAttribute("data-fullimageurl"));
     })
     .catch(function(error) {
       console.log(error);
@@ -45,21 +47,30 @@ const getWeatherDescription = data => {
 };
 
 const addThumbnails = images => {
+  const parent = document.querySelector("#thumbs");
+  parent.innerHTML = "";
   images.forEach(image => {
     const thumb = createImage(image.urls.thumb, image.urls.full);
-    const parent = document.querySelector('#thumbs');
     addImage(parent, thumb);
   });
-  document.querySelector('#thumbs').addEventListener('click', e => {
-    const srcURL = e.target.getAttribute('data-fullimageurl');
+
+  document.querySelector("#search").addEventListener("submit", e => {
+    e.preventDefault();
+    console.log(e.currentTarget.city.value);
+    params.city = e.currentTarget.city.value;
+    getCityWeather(params.city);
+  });
+
+  document.querySelector("#thumbs").addEventListener("click", e => {
+    const srcURL = e.target.getAttribute("data-fullimageurl");
     setHeroImage(srcURL);
   });
 };
 
 const createImage = (srcURL, fullImgURL) => {
-  const image = document.createElement('img');
+  const image = document.createElement("img");
   image.src = srcURL;
-  image.setAttribute('data-fullImageURL', fullImgURL);
+  image.setAttribute("data-fullImageURL", fullImgURL);
   return image;
 };
 
@@ -73,17 +84,14 @@ const getImageArray = selector => {
 };
 
 const setHeroImage = URL => {
-  const heroImage = createImage(URL, ' ');
-  const parent = document.querySelector('#photo');
-  parent.innerHTML = '';
+  const heroImage = createImage(URL, " ");
+  const parent = document.querySelector("#photo");
+  parent.innerHTML = "";
   addImage(parent, heroImage);
 };
 
-// add click event listener to each thumbnail image <- set event listener on #thumbs div
-// capture data-fullimageurl of clicked item with e.target
-// set the hero inage src url to the data-fullimageurl we captured
+//capture submit value from search__input
+//take tha value and update params city
+//update fetch with new function
 
-// document.querySelector('#thumbs').addEventListener('click', e => {
-//   const srcURL = e.target.getAttribute('data-fullimageurl');
-//   setHeroImage(srcURL);
-// });
+getCityWeather(params.city);
